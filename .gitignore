@@ -1,3 +1,11 @@
+
+# Mac and loacl stuff
+.DS_Store
+.vscode/
+# Local data
+*_data/
+annotated_transcripts/
+step2_files/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -143,6 +151,29 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Additional secrets and credentials
+*credentials*.json
+*credential*.json
+*secret*.json
+*.key
+*.pem
+*.p12
+*.pfx
+service-account*.json
+*-key.json
+*_secret.*
+*_creds.*
+secrets.yaml
+secrets.yml
+.secrets
+.credentials
+.token
+*.token
+auth_token
+.aws/credentials
+.gcp/*.json
+gcloud-key.json
 
 # Spyder project settings
 .spyderproject
