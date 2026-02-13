@@ -3,9 +3,7 @@
 .DS_Store
 .vscode/
 # Local data
-*_data/
-annotated_transcripts/
-step2_files/
+data/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

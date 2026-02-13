@@ -50,7 +50,9 @@ def check_api_connection(api_key: str = None) -> bool:
     Returns True if connection is successful, False otherwise.
     """
     if api_key is None:
-        api_key = os.environ.get("MY_ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_API_KEY")
+        api_key = os.environ.get("MY_ANTHROPIC_API_KEY") or os.environ.get(
+            "ANTHROPIC_API_KEY"
+        )
         if not api_key:
             print("❌ MY_ANTHROPIC_API_KEY not found in environment")
             return False
@@ -631,7 +633,9 @@ def annotate_interview(
 
     # Get API key
     if api_key is None:
-        api_key = os.environ.get("MY_ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_API_KEY")
+        api_key = os.environ.get("MY_ANTHROPIC_API_KEY") or os.environ.get(
+            "ANTHROPIC_API_KEY"
+        )
         if not api_key:
             raise ValueError(
                 "API key must be provided or set in MY_ANTHROPIC_API_KEY environment variable"
@@ -663,8 +667,9 @@ def annotate_interview(
             "  No existing speaker labels found - will run Step 1 (speaker identification)"
         )
 
-    # Set up checkpoint files in a_working_data directory
-    checkpoint_dir = Path("a_working_data") / ".checkpoints"
+    # Set up checkpoint files in data/approach_1/working directory
+    base_data_dir = Path(__file__).parent.parent / "data"
+    checkpoint_dir = base_data_dir / "approach_1" / "working" / ".checkpoints"
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
 
     step1_checkpoint = checkpoint_dir / f"{input_path.stem}_step1.json"

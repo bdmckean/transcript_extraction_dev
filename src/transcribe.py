@@ -564,7 +564,9 @@ def add_punctuation_with_llm(
     import os
 
     if api_key is None:
-        api_key = os.environ.get("MY_ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_API_KEY")
+        api_key = os.environ.get("MY_ANTHROPIC_API_KEY") or os.environ.get(
+            "ANTHROPIC_API_KEY"
+        )
         if not api_key:
             raise ValueError(
                 "API key must be provided or set in MY_ANTHROPIC_API_KEY environment variable"
@@ -613,7 +615,9 @@ def separate_by_speaker_changes(
     import os
 
     if api_key is None:
-        api_key = os.environ.get("MY_ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_API_KEY")
+        api_key = os.environ.get("MY_ANTHROPIC_API_KEY") or os.environ.get(
+            "ANTHROPIC_API_KEY"
+        )
         if not api_key:
             raise ValueError(
                 "API key must be provided or set in MY_ANTHROPIC_API_KEY environment variable"
@@ -716,8 +720,9 @@ def format_labeled_transcript(labeled_transcript: list[dict]) -> str:
 
 
 if __name__ == "__main__":
-    # Use local source directory for audio files
-    file_dir = "a_raw_data"
+    # Use paths relative to the project root
+    base_data_dir = Path(__file__).parent.parent / "data"
+    file_dir = base_data_dir / "source"
 
     # Get all .aac files in the directory
     aac_files = list(Path(file_dir).glob("*.aac"))
@@ -742,9 +747,9 @@ if __name__ == "__main__":
         # Put text file in same directory as aac file
         text_file = aac_file.with_suffix(".txt")
         # Write text file in working data dir for intermediate files
-        test_output_dir = "a_working_data"
-        Path(test_output_dir).mkdir(parents=True, exist_ok=True)
-        text_file = Path(test_output_dir) / text_file.name
+        test_output_dir = base_data_dir / "approach_1" / "working"
+        test_output_dir.mkdir(parents=True, exist_ok=True)
+        text_file = test_output_dir / text_file.name
 
         # Skip if text file already exists
         if text_file.exists():
@@ -894,7 +899,7 @@ if __name__ == "__main__":
                 step3_span = None
 
         annotated_file_name = text_file.stem + "_step3_annotated" + text_file.suffix
-        annotated_dest = Path("a_working_data") / annotated_file_name
+        annotated_dest = base_data_dir / "approach_1" / "working" / annotated_file_name
 
         # Check if annotated file exists and has speaker labels
         should_annotate = True
@@ -918,7 +923,10 @@ if __name__ == "__main__":
         if should_annotate:
             # Create temporary file with separated text for naming step
             temp_separated_file = (
-                Path("a_working_data") / f"{text_file.stem}_step2_temp_separated.txt"
+                base_data_dir
+                / "approach_1"
+                / "working"
+                / f"{text_file.stem}_step2_temp_separated.txt"
             )
             temp_separated_file.write_text(separated_text, encoding="utf-8")
 
@@ -975,8 +983,8 @@ if __name__ == "__main__":
             step3_span.end()
 
         # Copy annotated file to final output directory (only if it has speaker labels)
-        final_output_dir = "a_annotated_transcripts"
-        Path(final_output_dir).mkdir(parents=True, exist_ok=True)
+        final_output_dir = base_data_dir / "approach_1" / "output"
+        final_output_dir.mkdir(parents=True, exist_ok=True)
 
         if annotated_dest.exists():
             # Verify the file has speaker labels before copying
@@ -988,12 +996,10 @@ if __name__ == "__main__":
             if has_speaker_labels:
                 # Use clean name without step numbers in final_output
                 final_file_name = text_file.stem + "_step3_annotated" + text_file.suffix
-                final_output_path = Path(final_output_dir) / final_file_name
+                final_output_path = final_output_dir / final_file_name
 
                 # Remove any old incomplete files with similar names
-                for old_file in Path(final_output_dir).glob(
-                    f"{text_file.stem}*annotated*"
-                ):
+                for old_file in final_output_dir.glob(f"{text_file.stem}*annotated*"):
                     if old_file != final_output_path:
                         old_file.unlink()
                         print(f"  Removed old incomplete file: {old_file.name}")

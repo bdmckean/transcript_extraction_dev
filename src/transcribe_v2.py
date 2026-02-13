@@ -13,7 +13,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--file",
         "-f",
-        default="a_raw_data/8 ene. 11.41​entrevista a Paco .aac",
+        default="data/source/8 ene. 11.41​entrevista a Paco .aac",
         help="Path to the audio file to transcribe.",
     )
     parser.add_argument(
@@ -73,8 +73,9 @@ def main() -> None:
         end = format_timestamp(segment.get("end", 0.0))
         output_lines.append(f"[{start} - {end}] {speaker}: {text}")
 
-    # Write output to b_output_data directory (separate from approach 1)
-    output_dir = Path("b_output_data")
+    # Write output to approach_2/output directory (separate from approach 1)
+    base_data_dir = Path(__file__).parent.parent / "data"
+    output_dir = base_data_dir / "approach_2" / "output"
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / audio_path.with_suffix(".txt").name
     output_path.write_text("\n".join(output_lines), encoding="utf-8")
